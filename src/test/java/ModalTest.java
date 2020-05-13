@@ -1,46 +1,38 @@
 import aquality.selenium.browser.AlertActions;
 import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.browser.Browser;
-import framework.Utils;
+import framework.utils.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class ModalTest {
+public class ModalTest extends BaseTest {
 
     private Browser browser = AqualityServices.getBrowser();
     private String textAfterSubmitAlert1 = "You successfuly clicked an alert";
     private String textAfterSubmitAlert2 = "You clicked: Ok";
     private String randomText;
-    private String mainURL = "http://the-internet.herokuapp.com/javascript_alerts";
     private int sizeOfRandomString = 5;
-
-    @BeforeMethod
-    public void createDriver() {
-        browser.maximize();
-        browser.goTo(mainURL);
-    }
+    private String textOnFirstAlertFrame = "I am a JS Alert";
+    private String textOnSecondAlertFrame = "I am a JS Confirm";
+    private String textOnThirdAlertFrame = "I am a JS prompt";
 
     @Test
-    public void ModalWindowTest() {
+    public void testModalWindow() {
         MainPage mainPage = new MainPage();
         Assert.assertTrue(mainPage.isMainPageLoaded(), "Main page didn't load");
         mainPage.clickOnFirstButton();
+        Assert.assertEquals(StringUtils.getTextFromAlert(), textOnFirstAlertFrame, "text on the Alert frame is wrong");
         browser.handleAlert(AlertActions.ACCEPT);
-        Assert.assertTrue(mainPage.getTextFromAlert().equals(textAfterSubmitAlert1), "Alert message is wrong");
+        Assert.assertEquals(textAfterSubmitAlert1, mainPage.getTextResultAlert(), "Alert message is wrong");
         mainPage.clickOnSecondButton();
+        Assert.assertEquals(StringUtils.getTextFromAlert(), textOnSecondAlertFrame, "text on the Alert frame is wrong");
         browser.handleAlert(AlertActions.ACCEPT);
-        Assert.assertTrue(mainPage.getTextFromAlert().equals(textAfterSubmitAlert2), "Alert message is wrong");
+        Assert.assertEquals(textAfterSubmitAlert2, mainPage.getTextResultAlert(), "Alert message is wrong");
         mainPage.clickOnThirdButton();
-        randomText = new Utils().getRandomText(sizeOfRandomString);
+        Assert.assertEquals(StringUtils.getTextFromAlert(), textOnThirdAlertFrame, "text on the Alert frame is wrong");
+        randomText = StringUtils.getRandomText(sizeOfRandomString);
         browser.handlePromptAlert(AlertActions.ACCEPT, randomText);
-        Assert.assertTrue(mainPage.getTextFromAlert().contains(randomText), "Alert message is wrong");
-    }
-
-    @AfterMethod
-    public void driverQuit() {
-        browser.quit();
+        Assert.assertTrue(mainPage.getTextResultAlert().contains(randomText), "Alert message is wrong");
     }
 
 }

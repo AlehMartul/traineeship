@@ -1,38 +1,37 @@
 import aquality.selenium.browser.AqualityServices;
-import aquality.selenium.core.elements.ElementState;
+import aquality.selenium.elements.interfaces.IButton;
+import aquality.selenium.elements.interfaces.ILabel;
 import org.openqa.selenium.By;
 
+public class MainPage extends BasePage{
 
-
-public class MainPage {
-
-    private By jsAlert = By.xpath(".//button[@onclick='jsAlert()']");
-    private By jsConfirm = By.xpath(".//button[@onclick='jsConfirm()']");
-    private By jsPrompt = By.xpath(".//button[@onclick='jsPrompt()']");
-    private By textAfterSubmitAlert = By.xpath(".//p[@id='result']");
-
+    private ILabel textAfterSubmitAlert = AqualityServices.getElementFactory()
+            .getLabel(By.xpath("//p[@id='result']"), "textAfterSubmitAlert");
+    private IButton jsAlert = AqualityServices.getElementFactory()
+            .getButton(By.xpath("//button[@onclick='jsAlert()']"), "jsAlert");
+    private IButton jsConfirm = AqualityServices.getElementFactory()
+            .getButton(By.xpath("//button[@onclick='jsConfirm()']"), "jsAlert");
+    private IButton jsPrompt = AqualityServices.getElementFactory()
+            .getButton(By.xpath("//button[@onclick='jsPrompt()']"), "jsAlert");
 
     public void clickOnFirstButton() {
-       AqualityServices.getElementFactory().getButton(jsAlert, "Js alert").click();
+        jsAlert.click();
     }
 
     public void clickOnSecondButton() {
-        AqualityServices.getElementFactory().getButton(jsConfirm, "Js Confirm").click();
-
+        jsConfirm.click();
     }
 
     public void clickOnThirdButton() {
-        AqualityServices.getElementFactory().getButton(jsPrompt, "Js Prompt").click();
+        jsPrompt.click();
     }
 
-    public String getTextFromAlert() {
-        String alertText = AqualityServices.getElementFactory().getLabel(textAfterSubmitAlert, "text").getText();
+    public String getTextResultAlert() {
+        String alertText = textAfterSubmitAlert.getText();
         return alertText;
     }
 
     public boolean isMainPageLoaded() {
-        return AqualityServices.getElementFactory().getButton(jsAlert, "js alert", ElementState.DISPLAYED)
-                .state().waitForDisplayed();
+        return isPageLoaded(jsAlert);
     }
-
 }

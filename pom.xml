@@ -37,11 +37,6 @@
             <version>6.14.3</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-chrome-driver</artifactId>
-            <version>3.141.59</version>
-        </dependency>
     </dependencies>
 
 
