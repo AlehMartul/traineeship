@@ -1,9 +1,16 @@
 import aquality.selenium.browser.AlertActions;
 import aquality.selenium.browser.AqualityServices;
 import aquality.selenium.browser.Browser;
+import framework.utils.ReadPropertyTool;
 import framework.utils.StringUtils;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ModalTest extends BaseTest {
 
@@ -15,10 +22,16 @@ public class ModalTest extends BaseTest {
     private static final String TEXT_ON_FIRST_ALERT_FRAME = "I am a JS Alert";
     private static final String TEXT_ON_SECOND_ALERT_FRAME = "I am a JS Confirm";
     private static final String TEXT_ON_THIRD_ALERT_FRAME = "I am a JS prompt";
+    public static final String RESOURCES_PATH = "src/main/resources/";
+    public static final String MODAL_PROPERTIES = "modal.properties";
+    private static final String MAIN_URL = new ReadPropertyTool(ModalTest.RESOURCES_PATH, ModalTest.MODAL_PROPERTIES)
+            .getProperty("mainUrl");
 
     @Test
-    public void testModalWindow() {
+    public void testModalWindow() throws IOException {
         MainPage mainPage = new MainPage();
+        System.getProperty(MAIN_URL);
+        //System.out.println(MAIN_URL);
         Assert.assertTrue(mainPage.isMainPageLoaded(), "Main page didn't load");
         mainPage.clickOnFirstButton();
         Assert.assertEquals(StringUtils.getTextFromAlert(), TEXT_ON_FIRST_ALERT_FRAME, "text on the Alert frame is wrong");
@@ -29,6 +42,7 @@ public class ModalTest extends BaseTest {
         browser.handleAlert(AlertActions.ACCEPT);
         Assert.assertEquals(TEXT_AFTER_SUBMIT_ALERT2, mainPage.getTextResultAlert(), "Alert message is wrong");
         mainPage.clickOnThirdButton();
+
         Assert.assertEquals(StringUtils.getTextFromAlert(), TEXT_ON_THIRD_ALERT_FRAME, "text on the Alert frame is wrong");
         randomText = StringUtils.getRandomText(sizeOfRandomString);
         browser.handlePromptAlert(AlertActions.ACCEPT, randomText);
